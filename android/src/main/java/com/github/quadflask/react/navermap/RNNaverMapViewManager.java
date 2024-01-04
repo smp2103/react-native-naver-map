@@ -2,6 +2,7 @@ package com.github.quadflask.react.navermap;
 
 import android.graphics.Rect;
 import android.view.View;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -36,6 +37,7 @@ public class RNNaverMapViewManager extends ViewGroupManager<RNNaverMapViewContai
     private static final int ANIMATE_TO_REGION = 1;
     private static final int ANIMATE_TO_COORDINATE = 2;
     private static final int ANIMATE_TO_TWO_COORDINATES = 3;
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 100;
     private static final int SET_LOCATION_TRACKING_MODE = 4;
     private static final int ANIMATE_TO_COORDINATES = 6;
     private static final List<String> LAYER_GROUPS = Collections.unmodifiableList(Arrays.asList(
@@ -62,7 +64,7 @@ public class RNNaverMapViewManager extends ViewGroupManager<RNNaverMapViewContai
     @NonNull
     @Override
     protected RNNaverMapViewContainer createViewInstance(@NonNull ThemedReactContext reactContext) {
-        return new RNNaverMapViewContainer(reactContext, appContext, locationSource, getNaverMapViewOptions());
+        return new RNNaverMapViewContainer(reactContext, appContext, getNaverMapViewOptions());
     }
 
     protected NaverMapOptions getNaverMapViewOptions() {

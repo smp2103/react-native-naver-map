@@ -10,7 +10,6 @@ import com.naver.maps.geometry.LatLng;
 import com.naver.maps.geometry.LatLngBounds;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.NaverMapOptions;
-import com.naver.maps.map.util.FusedLocationSource;
 
 public class RNNaverMapViewContainer extends FrameLayout implements RNNaverMapViewProps {
     private final ReactApplicationContext appContext;
@@ -21,13 +20,13 @@ public class RNNaverMapViewContainer extends FrameLayout implements RNNaverMapVi
     private RNNaverMapView prevMapView;
     private boolean isAttachedToWindow = false;
 
-    public RNNaverMapViewContainer(@NonNull ThemedReactContext themedReactContext, ReactApplicationContext appContext, FusedLocationSource locationSource, NaverMapOptions naverMapOptions) {
+    public RNNaverMapViewContainer(@NonNull ThemedReactContext themedReactContext, ReactApplicationContext appContext, NaverMapOptions naverMapOptions) {
         super(ReactUtil.getNonBuggyContext(themedReactContext, appContext));
         this.appContext = appContext;
         this.themedReactContext = themedReactContext;
         this.locationSource = locationSource;
         this.naverMapOptions = naverMapOptions;
-        mapView = new RNNaverMapView(themedReactContext, appContext, locationSource, naverMapOptions);
+        mapView = new RNNaverMapView(themedReactContext, appContext, naverMapOptions);
         addView(mapView);
     }
 
