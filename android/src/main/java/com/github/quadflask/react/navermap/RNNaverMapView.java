@@ -3,12 +3,16 @@ package com.github.quadflask.react.navermap;
 import android.graphics.PointF;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
 import android.util.Log;
+import android.view.ViewGroup;
+import android.location.Location;
+import android.os.Build;
+import android.util.DisplayMetrics;
+import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 
-import com.airbnb.android.react.maps.ViewAttacherGroup;
+import com.airbnb.android.react.maps.NMapViewAttacherGroup;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.LifecycleEventListener;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -26,28 +30,28 @@ import com.naver.maps.map.util.FusedLocationSource;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RNNaverMapView extends MapView implements OnMapReadyCallback, NaverMap.OnCameraIdleListener, NaverMap.OnMapClickListener, RNNaverMapViewProps {
+public class RNNaverMapView extends MapView implements OnMapReadyCallback, NaverMap.OnLocationChangeListener, NaverMap.OnCameraIdleListener, NaverMap.OnMapClickListener, RNNaverMapViewProps {
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 100;
     private ThemedReactContext themedReactContext;
     private FusedLocationSource locationSource;
     private NaverMap naverMap;
-    private ViewAttacherGroup attacherGroup;
     private NaverMapSdk naverMapSdk;
+    private NMapViewAttacherGroup attacherGroup;
     private long lastTouch = 0;
     private final List<RNNaverMapFeature<?>> features = new ArrayList<>();
 
     public RNNaverMapView(@NonNull ThemedReactContext themedReactContext, ReactApplicationContext appContext, NaverMapOptions naverMapOptions, Bundle instanceStateBundle) {
         super(ReactUtil.getNonBuggyContext(themedReactContext, appContext), naverMapOptions);
         this.themedReactContext = themedReactContext;
-       this.locationSource = new FusedLocationSource(appContext.getCurrentActivity(), LOCATION_PERMISSION_REQUEST_CODE);
-        super.onCreate(null);
+        this.locationSource = new FusedLocationSource(appContext.getCurrentActivity(), LOCATION_PERMISSION_REQUEST_CODE);
+        super.onCreate(instanceStateBundle);
         naverMapSdk = NaverMapSdk.getInstance(appContext);
-        // super.onStart();
+//        super.onStart();
         getMapAsync(this);
 
         // Set up a parent view for triggering visibility in subviews that depend on it.
         // Mainly ReactImageView depends on Fresco which depends on onVisibilityChanged() event
-        attacherGroup = new ViewAttacherGroup(this.themedReactContext);
+        attacherGroup = new NMapViewAttacherGroup(this.themedReactContext);
         LayoutParams attacherLayoutParams = new LayoutParams(0, 0);
         attacherLayoutParams.width = 0;
         attacherLayoutParams.height = 0;
@@ -302,6 +306,17 @@ public class RNNaverMapView extends MapView implements OnMapReadyCallback, Naver
         param.putDouble("longitude", latLng.longitude);
 
         emitEvent("onMapClick", param);
+    }
+
+    @Override
+    public void onLocationChange(@NonNull Location location) {
+        WritableMap param = Arguments.createMap();
+        WritableMap coordinate = new WritableNativeMap();
+        coordinate.putDouble("latitude", location.getLatitude());
+        coordinate.putDouble("longitude", location.getLongitude());
+        param.putMap("coordinate", coordinate);
+
+        emitEvent("onUserLocationChange", param);
     }
 
     @Override

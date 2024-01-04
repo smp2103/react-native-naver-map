@@ -49,5 +49,8 @@
     "ios/Frameworks/**",
     "react-native-nmap.podspec",
     "android/**"
-  ]
+  ],
+  "dependencies": {
+    "@gbike/react-native-nmap": "^1.2.3"
+  }
 }
