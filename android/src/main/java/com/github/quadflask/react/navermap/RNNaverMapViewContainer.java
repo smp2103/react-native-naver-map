@@ -24,7 +24,8 @@ public class RNNaverMapViewContainer extends FrameLayout implements RNNaverMapVi
 
     public RNNaverMapViewContainer(@NonNull ThemedReactContext themedReactContext, ReactApplicationContext appContext, NaverMapOptions naverMapOptions) {
         super(ReactUtil.getNonBuggyContext(themedReactContext, appContext));
-        this.mapView = new RNNaverMapView(themedReactContext, appContext, naverMapOptions);
+      this.mapView = new RNNaverMapView(themedReactContext, appContext, naverMapOptions, instanceStateBundle);
+
         addView(mapView);
     }
 
